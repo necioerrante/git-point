@@ -9,6 +9,24 @@ import { MentionArea } from 'components';
 import { translate } from 'utils';
 import { colors, fonts, normalize } from 'config';
 
+import MarkdownIt from 'markdown-it';
+import 'normalize.css';
+import 'primer-tooltips/index.scss';
+import 'github-markdown-css';
+
+import MarkdownTextarea, {
+  actions,
+  help,
+  classNames,
+} from './markdown-text-area_with_octicons';
+import './markdown-text-area.scss';
+
+const markdown = new MarkdownIt();
+
+const classNamesWithPreview = Object.assign({}, classNames, {
+  preview: 'MarkdownTextarea-preview markdown-body',
+});
+
 const Container = styled.View`
   border-top-color: ${colors.greyLight};
   border-top-width: 1;
@@ -107,7 +125,7 @@ export class CommentInput extends Component {
         />
         <Wrapper>
           {userCanPost && (
-            <InputText
+            <MarkdownTextarea
               underlineColorAndroid={'transparent'}
               placeholder={
                 issueLocked && userHasPushPermission
@@ -125,7 +143,11 @@ export class CommentInput extends Component {
               style={{
                 height: Math.max(30, this.state.height),
               }}
+              render={value => markdown.render(value)}
               value={this.state.text}
+              actions={actions}
+              help={help}
+              classNames={classNamesWithPreview}
             />
           )}
 
